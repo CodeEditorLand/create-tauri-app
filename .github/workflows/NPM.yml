@@ -1,0 +1,151 @@
+name: NPM
+
+concurrency:
+    group: NPM-${{ github.workflow }}-${{ github.ref }}
+    cancel-in-progress: true
+
+permissions:
+    security-events: write
+    contents: write
+    pull-requests: write
+
+on:
+    workflow_dispatch:
+    release:
+        types: [created]
+    workflow_call:
+
+jobs:
+    Publish:
+        runs-on: ubuntu-latest
+
+        permissions:
+            contents: read
+            id-token: write
+
+        steps:
+            - uses: actions/checkout@v4.1.4
+
+            - uses: actions/setup-node@v4.0.2
+              with:
+                  node-version: "18"
+                  registry-url: "https://registry.npmjs.org"
+
+            - run: npm install -g npm
+
+            - name: Publish ./node/npm/darwin-arm64
+              continue-on-error: true
+              working-directory: ./node/npm/darwin-arm64
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/darwin-x64
+              continue-on-error: true
+              working-directory: ./node/npm/darwin-x64
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/linux-arm-gnueabihf
+              continue-on-error: true
+              working-directory: ./node/npm/linux-arm-gnueabihf
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/linux-arm64-gnu
+              continue-on-error: true
+              working-directory: ./node/npm/linux-arm64-gnu
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/linux-arm64-musl
+              continue-on-error: true
+              working-directory: ./node/npm/linux-arm64-musl
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/linux-x64-gnu
+              continue-on-error: true
+              working-directory: ./node/npm/linux-x64-gnu
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/linux-x64-musl
+              continue-on-error: true
+              working-directory: ./node/npm/linux-x64-musl
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/win32-arm64-msvc
+              continue-on-error: true
+              working-directory: ./node/npm/win32-arm64-msvc
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/win32-ia32-msvc
+              continue-on-error: true
+              working-directory: ./node/npm/win32-ia32-msvc
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node/npm/win32-x64-msvc
+              continue-on-error: true
+              working-directory: ./node/npm/win32-x64-msvc
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./node
+              continue-on-error: true
+              working-directory: ./node
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish .
+              continue-on-error: true
+              working-directory: .
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+            - name: Publish ./worker
+              continue-on-error: true
+              working-directory: ./worker
+              run: |
+                  npm install --include prod dev optional peer --legacy-peer-deps
+                  npm publish --legacy-peer-deps --provenance
+              env:
+                  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
