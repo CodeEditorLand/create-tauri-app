@@ -1,18 +1,33 @@
 {
+	"author": {
+		"email": "Land@PlayForm.Cloud",
+		"name": "🌆 — Land —",
+		"url": "HTTPS://Land.PlayForm.Cloud"
+	},
 	"bin": {
 		"create-tauri-app": "create-tauri-app.js"
+	},
+	"bugs": {
+		"url": "HTTPS://GitHub.Com/CodeEditorLand/CreateTauriApp/issues"
 	},
 	"contributors": [
 		"Tauri Team <team@tauri-apps.org> (https://tauri.app)"
 	],
 	"description": "Rapidly scaffold out a new tauri app project.",
 	"devDependencies": {
-		"@napi-rs/cli": "2.18"
+		"@napi-rs/cli": "2.18",
+		"@playform/build": "0.0.7",
+		"@playform/document": "0.0.6"
 	},
 	"funding": {
 		"type": "opencollective",
 		"url": "https://opencollective.com/tauri"
 	},
+	"homepage": "HTTPS://GitHub.Com/CodeEditorLand/CreateTauriApp#readme",
+	"keywords": [
+		"land"
+	],
+	"license": "SEE LICENSE IN LICENSE",
 	"main": "index.js",
 	"name": "create-tauri-app",
 	"napi": {
@@ -29,13 +44,24 @@
 			]
 		}
 	},
+	"private": false,
+	"publishConfig": {
+		"access": "public"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+HTTPS://github.com/CodeEditorLand/CreateTauriApp.git"
+	},
 	"scripts": {
+		"Document": "Document 'Source/**/*.ts'",
 		"artifacts": "napi artifacts",
 		"build": "napi build --platform --release",
 		"build:debug": "napi build --platform",
 		"create-tauri-app": "node ./create-tauri-app.js",
-		"prepublishOnly": "napi prepublish -t npm --gh-release-id $RELEASE_ID",
+		"prepublishOnly": "Build 'Source/**/*.ts'",
 		"version": "napi version"
 	},
-	"types": "index.d.ts"
+	"type": "module",
+	"types": "index.d.ts",
+	"version": "0.0.1"
 }
