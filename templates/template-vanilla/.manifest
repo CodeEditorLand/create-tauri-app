@@ -1,7 +1,0 @@
-devPath = {% if !beta %}../src{% endif %}
-distDir = ../src
-withGlobalTauri = true
-
-[files]
-tauri.svg = src/assets/tauri.svg
-styles.css = src/styles.css
