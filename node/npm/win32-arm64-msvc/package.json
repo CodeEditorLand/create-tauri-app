@@ -1,13 +1,7 @@
 {
 	"name": "create-tauri-app-win32-arm64-msvc",
 	"main": "create-tauri-app.win32-arm64-msvc.node",
-	"files": [
-		"create-tauri-app.win32-arm64-msvc.node"
-	],
-	"os": [
-		"win32"
-	],
-	"cpu": [
-		"arm64"
-	]
+	"files": ["create-tauri-app.win32-arm64-msvc.node"],
+	"os": ["win32"],
+	"cpu": ["arm64"]
 }

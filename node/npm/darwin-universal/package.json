@@ -1,10 +1,6 @@
 {
 	"name": "create-tauri-app-darwin-universal",
 	"main": "create-tauri-app.darwin-universal.node",
-	"files": [
-		"create-tauri-app.darwin-universal.node"
-	],
-	"os": [
-		"darwin"
-	]
+	"files": ["create-tauri-app.darwin-universal.node"],
+	"os": ["darwin"]
 }

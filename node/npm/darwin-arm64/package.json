@@ -1,13 +1,7 @@
 {
 	"name": "create-tauri-app-darwin-arm64",
 	"main": "create-tauri-app.darwin-arm64.node",
-	"files": [
-		"create-tauri-app.darwin-arm64.node"
-	],
-	"os": [
-		"darwin"
-	],
-	"cpu": [
-		"arm64"
-	]
+	"files": ["create-tauri-app.darwin-arm64.node"],
+	"os": ["darwin"],
+	"cpu": ["arm64"]
 }

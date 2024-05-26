@@ -1,13 +1,7 @@
 {
 	"name": "create-tauri-app-linux-arm-gnueabihf",
 	"main": "create-tauri-app.linux-arm-gnueabihf.node",
-	"files": [
-		"create-tauri-app.linux-arm-gnueabihf.node"
-	],
-	"os": [
-		"linux"
-	],
-	"cpu": [
-		"arm"
-	]
+	"files": ["create-tauri-app.linux-arm-gnueabihf.node"],
+	"os": ["linux"],
+	"cpu": ["arm"]
 }

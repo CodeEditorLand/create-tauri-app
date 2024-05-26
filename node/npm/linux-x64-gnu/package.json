@@ -1,16 +1,8 @@
 {
 	"name": "create-tauri-app-linux-x64-gnu",
 	"main": "create-tauri-app.linux-x64-gnu.node",
-	"files": [
-		"create-tauri-app.linux-x64-gnu.node"
-	],
-	"os": [
-		"linux"
-	],
-	"cpu": [
-		"x64"
-	],
-	"libc": [
-		"glibc"
-	]
+	"files": ["create-tauri-app.linux-x64-gnu.node"],
+	"os": ["linux"],
+	"cpu": ["x64"],
+	"libc": ["glibc"]
 }

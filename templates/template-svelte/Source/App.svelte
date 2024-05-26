@@ -1,5 +1,5 @@
 <script>
-  import Greet from './lib/Greet.svelte'
+
 </script>
 
 <main class="container">

@@ -5,9 +5,7 @@
 		"type": "opencollective",
 		"url": "https://opencollective.com/tauri"
 	},
-	"contributors": [
-		"Tauri Team <team@tauri-apps.org> (https://tauri.app)"
-	],
+	"contributors": ["Tauri Team <team@tauri-apps.org> (https://tauri.app)"],
 	"main": "index.js",
 	"types": "index.d.ts",
 	"bin": {

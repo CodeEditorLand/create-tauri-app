@@ -1,16 +1,8 @@
 {
 	"name": "create-tauri-app-linux-x64-musl",
 	"main": "create-tauri-app.linux-x64-musl.node",
-	"files": [
-		"create-tauri-app.linux-x64-musl.node"
-	],
-	"os": [
-		"linux"
-	],
-	"cpu": [
-		"x64"
-	],
-	"libc": [
-		"musl"
-	]
+	"files": ["create-tauri-app.linux-x64-musl.node"],
+	"os": ["linux"],
+	"cpu": ["x64"],
+	"libc": ["musl"]
 }
