@@ -1,10 +1,10 @@
 {
-	"dependencies": {},
-	"devDependencies": {
-		"covector": "0.11.0"
-	},
+	"scripts": {},
 	"resolutions": {
 		"undici": ">=6.11.1"
 	},
-	"scripts": {}
+	"dependencies": {},
+	"devDependencies": {
+		"covector": "0.11.0"
+	}
 }
