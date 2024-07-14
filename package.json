@@ -1,15 +1,10 @@
 {
-  "scripts": {
-    "format": "prettier --write --end-of-line=auto \"./**/*.{js,jsx,ts,tsx,html,css,json,vue}\"",
-    "format:check": "prettier --check --end-of-line=auto \"./**/*.{js,jsx,ts,tsx,html,css,json,vue}\""
-  },
-  "dependencies": {
-    "prettier": "3.3.2"
-  },
-  "devDependencies": {
-    "covector": "0.11.0"
-  },
-  "resolutions": {
-    "braces": ">=3.0.3"
-  }
+	"scripts": {},
+	"resolutions": {
+		"braces": ">=3.0.3"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"covector": "0.11.0"
+	}
 }
