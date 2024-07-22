@@ -1,13 +1,13 @@
 {
-	"cpu": [
-		"x64"
-	],
+	"name": "create-tauri-app-darwin-x64",
+	"main": "create-tauri-app.darwin-x64.node",
 	"files": [
 		"create-tauri-app.darwin-x64.node"
 	],
-	"main": "create-tauri-app.darwin-x64.node",
-	"name": "create-tauri-app-darwin-x64",
 	"os": [
 		"darwin"
+	],
+	"cpu": [
+		"x64"
 	]
 }
