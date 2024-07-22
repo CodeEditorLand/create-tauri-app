@@ -1,30 +1,20 @@
 {
-	"name": "create-tauri-app",
-	"description": "Rapidly scaffold out a new tauri app project.",
-	"funding": {
-		"type": "opencollective",
-		"url": "https://opencollective.com/tauri"
+	"bin": {
+		"create-tauri-app": "create-tauri-app.js"
 	},
 	"contributors": [
 		"Tauri Team <team@tauri-apps.org> (https://tauri.app)"
 	],
-	"main": "index.js",
-	"types": "index.d.ts",
-	"bin": {
-		"create-tauri-app": "create-tauri-app.js"
-	},
-	"scripts": {
-		"artifacts": "napi artifacts",
-		"build": "napi build --platform --release",
-		"build:debug": "napi build --platform",
-		"create-tauri-app": "node ./create-tauri-app.js",
-		"prepublishOnly": "napi prepublish -t npm --gh-release-id $RELEASE_ID",
-		"universal": "napi universal",
-		"version": "napi version"
-	},
+	"description": "Rapidly scaffold out a new tauri app project.",
 	"devDependencies": {
 		"@napi-rs/cli": "3.0.0-alpha.61"
 	},
+	"funding": {
+		"type": "opencollective",
+		"url": "https://opencollective.com/tauri"
+	},
+	"main": "index.js",
+	"name": "create-tauri-app",
 	"napi": {
 		"name": "create-tauri-app",
 		"triples": {
@@ -39,5 +29,15 @@
 				"aarch64-pc-windows-msvc"
 			]
 		}
-	}
+	},
+	"scripts": {
+		"artifacts": "napi artifacts",
+		"build": "napi build --platform --release",
+		"build:debug": "napi build --platform",
+		"create-tauri-app": "node ./create-tauri-app.js",
+		"prepublishOnly": "napi prepublish -t npm --gh-release-id $RELEASE_ID",
+		"universal": "napi universal",
+		"version": "napi version"
+	},
+	"types": "index.d.ts"
 }
