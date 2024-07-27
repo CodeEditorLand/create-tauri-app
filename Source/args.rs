@@ -10,37 +10,37 @@ use crate::{package_manager::PackageManager, template::Template, utils::colors::
 
 #[derive(Debug)]
 pub struct Args {
-    pub project_name: Option<String>,
-    pub manager: Option<PackageManager>,
-    pub template: Option<Template>,
-    pub skip: bool,
-    pub force: bool,
-    pub beta: bool,
-    pub mobile: Option<bool>,
-    pub no_mobile: Option<bool>,
+	pub project_name: Option<String>,
+	pub manager: Option<PackageManager>,
+	pub template: Option<Template>,
+	pub skip: bool,
+	pub force: bool,
+	pub beta: bool,
+	pub mobile: Option<bool>,
+	pub no_mobile: Option<bool>,
 }
 
 impl Default for Args {
-    fn default() -> Self {
-        Self {
-            project_name: Some("tauri-app".to_string()),
-            manager: Some(PackageManager::Npm),
-            template: Some(Template::Vanilla),
-            skip: false,
-            force: false,
-            beta: false,
-            mobile: Some(false), // default for this value must be Some(false), as we use it as fallback when -y is used
-            no_mobile: None,
-        }
-    }
+	fn default() -> Self {
+		Self {
+			project_name: Some("tauri-app".to_string()),
+			manager: Some(PackageManager::Npm),
+			template: Some(Template::Vanilla),
+			skip: false,
+			force: false,
+			beta: false,
+			mobile: Some(false), // default for this value must be Some(false), as we use it as fallback when -y is used
+			no_mobile: None,
+		}
+	}
 }
 
 pub fn parse(argv: Vec<OsString>, bin_name: Option<String>) -> anyhow::Result<Args> {
-    let mut pargs = Arguments::from_vec(argv);
+	let mut pargs = Arguments::from_vec(argv);
 
-    if pargs.contains(["-h", "--help"]) {
-        let help = format!(
-            r#"
+	if pargs.contains(["-h", "--help"]) {
+		let help = format!(
+			r#"
 {GREEN}{name}{RESET} {version}
 {authors}
 {desc}
@@ -62,58 +62,50 @@ pub fn parse(argv: Vec<OsString>, bin_name: Option<String>) -> anyhow::Result<Ar
   {GREEN}-h{RESET}, {GREEN}--help{RESET}                    Prints help information
   {GREEN}-v{RESET}, {GREEN}--version{RESET}                 Prints version information
 "#,
-            name = bin_name.unwrap_or_else(|| env!("CARGO_PKG_NAME").to_string()),
-            version = env!("CARGO_PKG_VERSION"),
-            authors = env!("CARGO_PKG_AUTHORS"),
-            desc = env!("CARGO_PKG_DESCRIPTION"),
-            managers = PackageManager::ALL
-                .iter()
-                .map(|e| format!("{GREEN}{e}{RESET}"))
-                .collect::<Vec<_>>()
-                .join(", "),
-            templates = Template::ALL
-                .iter()
-                .map(|e| format!("{GREEN}{e}{RESET}"))
-                .collect::<Vec<_>>()
-                .join(", "),
-        );
+			name = bin_name.unwrap_or_else(|| env!("CARGO_PKG_NAME").to_string()),
+			version = env!("CARGO_PKG_VERSION"),
+			authors = env!("CARGO_PKG_AUTHORS"),
+			desc = env!("CARGO_PKG_DESCRIPTION"),
+			managers = PackageManager::ALL
+				.iter()
+				.map(|e| format!("{GREEN}{e}{RESET}"))
+				.collect::<Vec<_>>()
+				.join(", "),
+			templates = Template::ALL
+				.iter()
+				.map(|e| format!("{GREEN}{e}{RESET}"))
+				.collect::<Vec<_>>()
+				.join(", "),
+		);
 
-        println!("{help}");
-        std::process::exit(0);
-    }
-    if pargs.contains(["-v", "--version"]) {
-        println!("{}", env!("CARGO_PKG_VERSION"));
-        std::process::exit(0);
-    }
+		println!("{help}");
+		std::process::exit(0);
+	}
+	if pargs.contains(["-v", "--version"]) {
+		println!("{}", env!("CARGO_PKG_VERSION"));
+		std::process::exit(0);
+	}
 
-    // pargs.contains() consume the flag so we have to bind the bool to a variable.
-    let beta = if pargs.contains("--alpha") {
-        eprintln!(
+	// pargs.contains() consume the flag so we have to bind the bool to a variable.
+	let beta = if pargs.contains("--alpha") {
+		eprintln!(
                 "{BOLD}{YELLOW}warning{RESET}: The `{GREEN}--alpha{RESET}` option is now an alias for `{GREEN}--beta{RESET}` and may be removed in the future."
             );
-        true
-    } else {
-        pargs.contains("--beta")
-    };
+		true
+	} else {
+		pargs.contains("--beta")
+	};
 
-    let args = Args {
-        manager: pargs.opt_value_from_str(["-m", "--manager"])?,
-        template: pargs.opt_value_from_str(["-t", "--template"])?,
-        skip: pargs.contains(["-y", "--yes"]),
-        force: pargs.contains(["-f", "--force"]),
-        beta,
-        mobile: if pargs.contains("--mobile") {
-            Some(true)
-        } else {
-            None
-        },
-        no_mobile: if pargs.contains("--no-mobile") {
-            Some(true)
-        } else {
-            None
-        },
-        project_name: pargs.opt_free_from_str()?,
-    };
+	let args = Args {
+		manager: pargs.opt_value_from_str(["-m", "--manager"])?,
+		template: pargs.opt_value_from_str(["-t", "--template"])?,
+		skip: pargs.contains(["-y", "--yes"]),
+		force: pargs.contains(["-f", "--force"]),
+		beta,
+		mobile: if pargs.contains("--mobile") { Some(true) } else { None },
+		no_mobile: if pargs.contains("--no-mobile") { Some(true) } else { None },
+		project_name: pargs.opt_free_from_str()?,
+	};
 
-    Ok(args)
+	Ok(args)
 }
