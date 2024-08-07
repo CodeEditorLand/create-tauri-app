@@ -1,7 +1,7 @@
 [package]
 name = "create-tauri-app"
 description = "Rapidly scaffold out a new tauri app project."
-authors = [ "Tauri Programme within The Commons Conservancy" ]
+authors = ["Tauri Programme within The Commons Conservancy"]
 version = "4.1.0"
 edition = "2021"
 license = "Apache-2.0 OR MIT"
@@ -21,10 +21,11 @@ resolver = "2"
 members = ["node"]
 
 [profile.release]
-panic = "abort"
+opt-level = 3
 codegen-units = 1
+debug = false
 lto = true
-opt-level = "s"
+panic = "abort"
 strip = true
 
 [dependencies]
