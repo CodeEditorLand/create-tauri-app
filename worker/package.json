@@ -1,6 +1,8 @@
 {
-	"devDependencies": {
-		"wrangler": "3.72.0"
-	},
-	"name": "create-tauri-app-worker"
+  "name": "create-tauri-app-worker",
+  "version": "0.0.0",
+  "license": "Apache-2.0 OR MIT",
+  "devDependencies": {
+    "wrangler": "3.72.0"
+  }
 }
