@@ -1,13 +1,18 @@
 {
-	"cpu": [
-		"x64"
-	],
-	"files": [
-		"create-tauri-app.darwin-x64.node"
-	],
-	"main": "create-tauri-app.darwin-x64.node",
-	"name": "create-tauri-app-darwin-x64",
-	"os": [
-		"darwin"
-	]
+  "name": "create-tauri-app-darwin-x64",
+  "version": "0.0.0",
+  "os": [
+    "darwin"
+  ],
+  "cpu": [
+    "x64"
+  ],
+  "main": "create-tauri-app.darwin-x64.node",
+  "files": [
+    "create-tauri-app.darwin-x64.node"
+  ],
+  "license": "MIT",
+  "engines": {
+    "node": ">= 10"
+  }
 }
