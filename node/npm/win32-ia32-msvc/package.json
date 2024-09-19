@@ -1,18 +1,13 @@
 {
-  "name": "create-tauri-app-win32-ia32-msvc",
-  "version": "0.0.0",
-  "os": [
-    "win32"
-  ],
-  "cpu": [
-    "ia32"
-  ],
-  "main": "create-tauri-app.win32-ia32-msvc.node",
-  "files": [
-    "create-tauri-app.win32-ia32-msvc.node"
-  ],
-  "license": "MIT",
-  "engines": {
-    "node": ">= 10"
-  }
+	"cpu": [
+		"ia32"
+	],
+	"files": [
+		"create-tauri-app.win32-ia32-msvc.node"
+	],
+	"main": "create-tauri-app.win32-ia32-msvc.node",
+	"name": "create-tauri-app-win32-ia32-msvc",
+	"os": [
+		"win32"
+	]
 }
