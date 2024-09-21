@@ -6,7 +6,6 @@ license = "Apache-2.0 OR MIT"
 
 [lib]
 crate-type = ["cdylib"]
-path = "Source/lib.rs"
 
 [dependencies]
 # Default enable napi4 feature, see https://nodejs.org/api/n-api.html#node-api-version-matrix
