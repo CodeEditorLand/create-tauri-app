@@ -18,15 +18,15 @@ pub const DIMRESET: &str = "\x1b[22m";
 
 #[inline]
 pub fn remove_colors(s: &str) -> String {
-	s.replace(BLACK, "")
-		.replace(RED, "")
-		.replace(GREEN, "")
-		.replace(YELLOW, "")
-		.replace(BLUE, "")
-		.replace(WHITE, "")
-		.replace(RESET, "")
-		.replace(BOLD, "")
-		.replace(ITALIC, "")
-		.replace(DIM, "")
-		.replace(DIMRESET, "")
+    s.replace(BLACK, "")
+        .replace(RED, "")
+        .replace(GREEN, "")
+        .replace(YELLOW, "")
+        .replace(BLUE, "")
+        .replace(WHITE, "")
+        .replace(RESET, "")
+        .replace(BOLD, "")
+        .replace(ITALIC, "")
+        .replace(DIM, "")
+        .replace(DIMRESET, "")
 }
