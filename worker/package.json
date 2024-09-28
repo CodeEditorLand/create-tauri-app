@@ -2,7 +2,7 @@
 	"name": "create-tauri-app-worker",
 	"devDependencies": {
 <<<<<<< HEAD
-		"wrangler": "^3.74"
+		"wrangler": "3.74"
 	}
 =======
 		"wrangler": "3.78"
