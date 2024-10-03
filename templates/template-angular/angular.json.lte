@@ -49,7 +49,8 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "port": 1420
+            "port": 1420{% if rc %},
+            "host": "0.0.0.0"{% endif %}
           },
           "configurations": {
             "production": {
