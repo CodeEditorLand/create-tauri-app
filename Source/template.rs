@@ -8,6 +8,7 @@ use anyhow::Context;
 use rust_embed::Embed;
 
 use crate::{
+    args::TauriVersion,
     manifest::Manifest,
     package_manager::PackageManager,
     utils::{self, colors::*, lte},
@@ -264,7 +265,7 @@ impl<'a> Template {
         project_name: &str,
         package_name: &str,
         identifier: &str,
-        rc: bool,
+        tauri_version: TauriVersion,
     ) -> anyhow::Result<()> {
         let manifest_bytes =
             EMBEDDED_TEMPLATES::get(&format!("template-{self}/{CTA_MANIFEST_FILENAME}"))
@@ -277,25 +278,18 @@ impl<'a> Template {
         let lib_name = format!("{}_lib", package_name.replace('-', "_"));
         let project_name_pascal_case = utils::to_pascal_case(project_name);
 
-        let rc_str = rc.to_string();
-        let manifest_template_data: HashMap<&str, &str> = [
-            ("rc", rc_str.as_str()),
-            ("pkg_manager_run_command", pkg_manager.run_cmd()),
-            ("lib_name", &lib_name),
-            ("package_name", package_name),
-            ("project_name", project_name),
-            ("identifier", identifier),
-            ("project_name_pascal_case", &project_name_pascal_case),
-            (
-                "double_dash_with_space",
-                if pkg_manager == PackageManager::Npm {
-                    "-- "
-                } else {
-                    ""
-                },
-            ),
-        ]
-        .into();
+        let versions = TauriVersion::all()
+            .iter()
+            .map(|&v| {
+                (
+                    format!("v{v}",),
+                    match v == tauri_version {
+                        true => "true",
+                        false => "false",
+                    },
+                )
+            })
+            .collect::<Vec<_>>();
 
         let styles = String::from_utf8(
             EMBEDDED_TEMPLATES::get("_assets_/styles.css")
@@ -304,9 +298,21 @@ impl<'a> Template {
                 .to_vec(),
         )?;
 
-        let template_data: HashMap<&str, String> = [
-            ("stable", (!rc).to_string()),
-            ("rc", rc_str.clone()),
+        let mut manifest_template_data: HashMap<&str, &str> = [
+            ("pkg_manager_run_command", pkg_manager.run_cmd()),
+            ("lib_name", &lib_name),
+            ("package_name", package_name),
+            ("project_name", project_name),
+            ("identifier", identifier),
+            ("project_name_pascal_case", &project_name_pascal_case),
+        ]
+        .into();
+
+        for (version, enabled) in &versions {
+            manifest_template_data.insert(version, enabled);
+        }
+
+        let mut template_data: HashMap<&str, String> = [
             ("project_name", project_name.to_string()),
             (
                 "project_name_pascal_case",
@@ -329,16 +335,16 @@ impl<'a> Template {
                 )?,
             ),
             (
-                "dev_path",
+                "dev_url",
                 lte::render(
-                    manifest.dev_path.unwrap_or_default(),
+                    manifest.dev_url.unwrap_or_default(),
                     &manifest_template_data,
                 )?,
             ),
             (
-                "dist_dir",
+                "frontend_dist",
                 lte::render(
-                    manifest.dist_dir.unwrap_or_default(),
+                    manifest.frontend_dist.unwrap_or_default(),
                     &manifest_template_data,
                 )?,
             ),
@@ -347,23 +353,18 @@ impl<'a> Template {
                 manifest.with_global_tauri.unwrap_or_default().to_string(),
             ),
             ("lib_name", lib_name),
-            (
-                "styles_padded",
-                styles
-                    .lines()
-                    .map(|l| {
-                        if l.is_empty() {
-                            l.to_string()
-                        } else {
-                            format!("  {l}")
-                        }
-                    })
-                    .collect::<Vec<_>>()
-                    .join("\n"),
-            ),
             ("styles", styles),
         ]
         .into();
+
+        for (version, enabled) in &versions {
+            template_data.insert(version.as_str(), enabled.to_string());
+        }
+
+        let version_flags = TauriVersion::all()
+            .iter()
+            .map(|&v| (v, format!("v{v}")))
+            .collect::<Vec<_>>();
 
         let write_file = |file: &str, template_data| -> anyhow::Result<()> {
             // remove the first component, which is certainly the template directory they were in before getting embeded into the binary
@@ -384,8 +385,8 @@ impl<'a> Template {
                 // conditional files:
                 // are files that start with a special syntax
                 //          "%(<list of flags separated by `-`>%)<file_name>"
-                // flags are supported package managers, stable and rc.
-                // example: "%(pnpm-npm-yarn-stable-rc)%package.json"
+                // flags are supported package managers, and `v-$versionNumber` (tauri version filter).
+                // example: "%(pnpm-npm-yarn-stable-v1)%package.json"
                 name if name.starts_with("%(") && name[1..].contains(")%") => {
                     let mut s = name.strip_prefix("%(").unwrap().split(")%");
                     let (mut flags, name) = (
@@ -393,13 +394,19 @@ impl<'a> Template {
                         s.next().unwrap(),
                     );
 
-                    let for_stable = flags.contains(&"stable");
-                    let for_rc = flags.contains(&"rc");
+                    let for_version = version_flags
+                        .iter()
+                        .find(|(_, flag)| flags.contains(&flag.as_str()))
+                        .map(|(v, _)| *v);
 
-                    // remove these flags to only keep package managers flags
-                    flags.retain(|e| !["stable", "rc"].contains(e));
+                    // remove version flags to only keep package managers flags
+                    flags.retain(|e| !version_flags.iter().any(|(_, flag)| e == flag));
 
-                    if ((for_stable && !rc) || (for_rc && rc) || (!for_stable && !for_rc))
+                    // this file has a version flag and matches active version.
+                    // if doesn't have any version flag, it should be rendered
+                    if for_version.map(|v| v == tauri_version).unwrap_or(true)
+                        // this file has a package manager flag and matches active package manager.
+                        // if doesn't have any package manager flag, it should be rendered
                         && (flags.contains(&pkg_manager.to_string().as_str()) || flags.is_empty())
                     {
                         name
