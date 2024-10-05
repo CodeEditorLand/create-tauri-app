@@ -37,7 +37,9 @@ bunx create-tauri-app
 
 <br>
 
-You can also directly specify the project name, package manager and the template you want to use via additional command line options. For example, to scaffold a Svelte project in a `my-tauri-app` directory, run:
+You can also directly specify the project name, package manager and the template
+you want to use via additional command line options. For example, to scaffold a
+Svelte project in a `my-tauri-app` directory, run:
 
 ```bash
 # npm 6.x
@@ -54,27 +56,28 @@ bunx create-tauri-app my-tauri-app --template svelte --manager bun
 
 Currently supported template presets include:
 
-- `vanilla`
-- `vanilla-ts`
-- `vue`
-- `vue-ts`
-- `svelte`
-- `svelte-ts`
-- `react`
-- `react-ts`
-- `solid`
-- `solid-ts`
-- `angular`
-- `yew`
-- `leptos`
-- `sycamore`
-- `blazor`
+-   `vanilla`
+-   `vanilla-ts`
+-   `vue`
+-   `vue-ts`
+-   `svelte`
+-   `svelte-ts`
+-   `react`
+-   `react-ts`
+-   `solid`
+-   `solid-ts`
+-   `angular`
+-   `yew`
+-   `leptos`
+-   `sycamore`
+-   `blazor`
 
 You can use `.` for the project name to scaffold in the current directory.
 
 ## Semver
 
-**create-tauri-app** is following [Semantic Versioning 2.0](https://semver.org/).
+**create-tauri-app** is following
+[Semantic Versioning 2.0](https://semver.org/).
 
 ## Licenses
 
@@ -84,4 +87,6 @@ MIT or MIT/Apache 2.0 where applicable.
 
 Logo: CC-BY-NC-ND
 
-- Original Tauri Logo Designs by [Daniel Thompson-Yvetot](https://github.com/nothingismagick) and [Guillaume Chau](https://github.com/akryum)
+-   Original Tauri Logo Designs by
+    [Daniel Thompson-Yvetot](https://github.com/nothingismagick) and
+    [Guillaume Chau](https://github.com/akryum)
