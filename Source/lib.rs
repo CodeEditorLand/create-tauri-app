@@ -39,11 +39,8 @@ pub mod internal {
 	}
 }
 
-pub fn run<I, A>(
-	args:I,
-	bin_name:Option<String>,
-	detected_manager:Option<String>,
-) where
+pub fn run<I, A>(args:I, bin_name:Option<String>, detected_manager:Option<String>)
+where
 	I: IntoIterator<Item = A>,
 	A: Into<OsString> + Clone, {
 	let _ = ctrlc::set_handler(move || {
@@ -64,20 +61,11 @@ fn try_run<I, A>(
 where
 	I: IntoIterator<Item = A>,
 	A: Into<OsString> + Clone, {
-	let detected_manager =
-		detected_manager.and_then(|p| p.parse::<PackageManager>().ok());
-	let args =
-		args::parse(args.into_iter().map(Into::into).collect(), bin_name)?;
+	let detected_manager = detected_manager.and_then(|p| p.parse::<PackageManager>().ok());
+	let args = args::parse(args.into_iter().map(Into::into).collect(), bin_name)?;
 	let defaults = args::Args::default();
-	let args::Args {
-		skip,
-		tauri_version,
-		manager,
-		project_name,
-		template,
-		force,
-		identifier,
-	} = args;
+	let args::Args { skip, tauri_version, manager, project_name, template, force, identifier } =
+		args;
 	let cwd = std::env::current_dir()?;
 
 	// Project name used for the project directory name and productName in
@@ -86,9 +74,7 @@ where
 	let project_name = match project_name {
 		Some(name) => name,
 		None => {
-			let default = defaults
-				.project_name
-				.context("default project_name not set")?;
+			let default = defaults.project_name.context("default project_name not set")?;
 			if skip {
 				default
 			} else {
@@ -120,9 +106,8 @@ where
 					if utils::is_valid_pkg_name(input) {
 						Ok(())
 					} else {
-						Err("Package name should only include lowercase \
-						     alphanumeric character and hyphens \"-\" and \
-						     doesn't start with numbers")
+						Err("Package name should only include lowercase alphanumeric character \
+						     and hyphens \"-\" and doesn't start with numbers")
 					}
 				})
 				.interact_text()?
@@ -161,21 +146,14 @@ where
 					if target_dir == cwd {
 						"Current".to_string()
 					} else {
-						target_dir
-							.file_name()
-							.unwrap()
-							.to_string_lossy()
-							.to_string()
+						target_dir.file_name().unwrap().to_string_lossy().to_string()
 					}
 				))
 				.default(false)
 				.interact()?
 		};
 		if !overwrite {
-			eprintln!(
-				"{BOLD}{RED}✘{RESET} Directory is not empty, Operation \
-				 Cancelled"
-			);
+			eprintln!("{BOLD}{RED}✘{RESET} Directory is not empty, Operation Cancelled");
 			exit(1);
 		}
 	};
@@ -189,9 +167,7 @@ where
 				managers
 					.iter()
 					.copied()
-					.filter(|p| {
-						p.templates_no_flavors().contains(&t.without_flavor())
-					})
+					.filter(|p| p.templates_no_flavors().contains(&t.without_flavor()))
 					.collect::<Vec<_>>()
 			})
 			.unwrap_or(managers);
@@ -200,9 +176,7 @@ where
 		let categories = Category::ALL.to_vec();
 		let mut categories = categories
 			.into_iter()
-			.filter(|c| {
-				c.package_managers().iter().any(|p| managers.contains(p))
-			})
+			.filter(|c| c.package_managers().iter().any(|p| managers.contains(p)))
 			.collect::<Vec<_>>();
 
 		// sort categories so the most relevant category
@@ -211,11 +185,7 @@ where
 			detected_manager
 				.map(|p| b.package_managers().contains(&p))
 				.unwrap_or(false)
-				.cmp(
-					&detected_manager
-						.map(|p| a.package_managers().contains(&p))
-						.unwrap_or(false),
-				)
+				.cmp(&detected_manager.map(|p| a.package_managers().contains(&p)).unwrap_or(false))
 		});
 
 		// Skip prompt, if only one category is detected or explicit skip
@@ -244,9 +214,10 @@ where
 				// sort managers so the auto-detected package manager is
 				// selected first
 				managers.sort_by(|a, b| {
-					detected_manager.map(|p| p == *b).unwrap_or(false).cmp(
-						&detected_manager.map(|p| p == *a).unwrap_or(false),
-					)
+					detected_manager
+						.map(|p| p == *b)
+						.unwrap_or(false)
+						.cmp(&detected_manager.map(|p| p == *a).unwrap_or(false))
 				});
 				// Skip prompt, if only one package manager is detected or
 				// explicit skip requested by `-y/--yes` flag
@@ -278,10 +249,7 @@ where
 				let index = Select::with_theme(&ColorfulTheme::default())
 					.with_prompt("Choose your UI template")
 					.items(
-						&templates_no_flavors
-							.iter()
-							.map(|t| t.select_text())
-							.collect::<Vec<_>>(),
+						&templates_no_flavors.iter().map(|t| t.select_text()).collect::<Vec<_>>(),
 					)
 					.default(0)
 					.interact()?;
@@ -309,12 +277,11 @@ where
 	// combination is valid, otherwise, we error and exit
 	if !pkg_manager.templates().contains(&template) {
 		eprintln!(
-			"{BOLD}{RED}error{RESET}: the {GREEN}{template}{RESET} template \
-			 is not suppported for the {GREEN}{pkg_manager}{RESET} package \
-			 manager\n       possible templates for \
-			 {GREEN}{pkg_manager}{RESET} are: [{}]\n       or maybe you meant \
-			 to use another package manager\n       possible package managers \
-			 for {GREEN}{template}{RESET} are: [{}]",
+			"{BOLD}{RED}error{RESET}: the {GREEN}{template}{RESET} template is not suppported for \
+			 the {GREEN}{pkg_manager}{RESET} package manager\n       possible templates for \
+			 {GREEN}{pkg_manager}{RESET} are: [{}]\n       or maybe you meant to use another \
+			 package manager\n       possible package managers for {GREEN}{template}{RESET} are: \
+			 [{}]",
 			templates_no_flavors
 				.iter()
 				.map(|e| format!("{GREEN}{e}{RESET}"))

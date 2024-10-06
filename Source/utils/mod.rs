@@ -6,10 +6,7 @@ pub fn is_valid_pkg_name(project_name:&str) -> bool {
 	let mut chars = project_name.chars().peekable();
 	!project_name.is_empty()
 		&& !chars.peek().map(|c| c.is_ascii_digit()).unwrap_or_default()
-		&& !chars.any(|ch| {
-			!(ch.is_alphanumeric() || ch == '-' || ch == '_')
-				|| ch.is_uppercase()
-		})
+		&& !chars.any(|ch| !(ch.is_alphanumeric() || ch == '-' || ch == '_') || ch.is_uppercase())
 }
 
 pub fn to_valid_pkg_name(project_name:&str) -> String {

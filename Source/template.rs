@@ -2,14 +2,7 @@
 // SPDX-License-Identifier: Apache-2.0
 // SPDX-License-Identifier: MIT
 
-use std::{
-	collections::HashMap,
-	fmt::Display,
-	fs,
-	io::Write,
-	path,
-	str::FromStr,
-};
+use std::{collections::HashMap, fmt::Display, fs, io::Write, path, str::FromStr};
 
 use anyhow::Context;
 use rust_embed::Embed;
@@ -119,8 +112,7 @@ impl FromStr for Template {
 			"dioxus" => Ok(Template::Dioxus),
 			_ => {
 				Err(format!(
-					"{YELLOW}{s}{RESET} is not a valid template. Valid \
-					 templates are [{}]",
+					"{YELLOW}{s}{RESET} is not a valid template. Valid templates are [{}]",
 					Template::ALL
 						.iter()
 						.map(|e| format!("{GREEN}{e}{RESET}"))
@@ -135,22 +127,22 @@ impl FromStr for Template {
 impl Template {
 	pub const fn select_text<'a>(&self) -> &'a str {
 		match self {
-            Template::Vanilla => "Vanilla",
-            Template::Vue => "Vue - (https://vuejs.org/)",
-            Template::Svelte => "Svelte - (https://svelte.dev/)",
-            Template::React => "React - (https://react.dev/)",
-            Template::Solid => "Solid - (https://solidjs.com/)",
-            Template::Yew => "Yew - (https://yew.rs/)",
-            Template::Leptos => "Leptos - (https://leptos.dev/)",
-            Template::Sycamore => "Sycamore - (https://sycamore-rs.netlify.app/)",
-            Template::Angular => "Angular - (https://angular.dev/)",
-            Template::Preact => "Preact - (https://preactjs.com/)",
-            Template::Blazor => {
-                "Blazor - (https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor/)"
-            }
-            Template::Dioxus => "Dioxus - (https://dioxuslabs.com/)",
-            _ => unreachable!(),
-        }
+			Template::Vanilla => "Vanilla",
+			Template::Vue => "Vue - (https://vuejs.org/)",
+			Template::Svelte => "Svelte - (https://svelte.dev/)",
+			Template::React => "React - (https://react.dev/)",
+			Template::Solid => "Solid - (https://solidjs.com/)",
+			Template::Yew => "Yew - (https://yew.rs/)",
+			Template::Leptos => "Leptos - (https://leptos.dev/)",
+			Template::Sycamore => "Sycamore - (https://sycamore-rs.netlify.app/)",
+			Template::Angular => "Angular - (https://angular.dev/)",
+			Template::Preact => "Preact - (https://preactjs.com/)",
+			Template::Blazor => {
+				"Blazor - (https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor/)"
+			},
+			Template::Dioxus => "Dioxus - (https://dioxuslabs.com/)",
+			_ => unreachable!(),
+		}
 	}
 }
 
@@ -176,10 +168,7 @@ impl<'a> Template {
 		Template::Dioxus,
 	];
 
-	pub fn flavors<'b>(
-		&self,
-		pkg_manager:PackageManager,
-	) -> Option<&'b [Flavor]> {
+	pub fn flavors<'b>(&self, pkg_manager:PackageManager) -> Option<&'b [Flavor]> {
 		match self {
 			Template::Vanilla => {
 				if pkg_manager == PackageManager::Cargo {
@@ -244,10 +233,9 @@ impl<'a> Template {
 			| Template::Angular
 			| Template::Preact
 			| Template::PreactTs => PackageManager::NODE,
-			Template::Yew
-			| Template::Leptos
-			| Template::Sycamore
-			| Template::Dioxus => &[PackageManager::Cargo],
+			Template::Yew | Template::Leptos | Template::Sycamore | Template::Dioxus => {
+				&[PackageManager::Cargo]
+			},
 			Template::Blazor => &[PackageManager::Dotnet],
 		}
 	}
@@ -257,22 +245,12 @@ impl<'a> Template {
 	}
 
 	pub const fn needs_tauri_cli(&self) -> bool {
-		matches!(
-			self,
-			Template::Sycamore
-				| Template::Yew
-				| Template::Leptos
-				| Template::Vanilla
-		)
+		matches!(self, Template::Sycamore | Template::Yew | Template::Leptos | Template::Vanilla)
 	}
 
-	pub const fn needs_dotnet(&self) -> bool {
-		matches!(self, Template::Blazor)
-	}
+	pub const fn needs_dotnet(&self) -> bool { matches!(self, Template::Blazor) }
 
-	pub const fn needs_dioxus_cli(&self) -> bool {
-		matches!(self, Template::Dioxus)
-	}
+	pub const fn needs_dioxus_cli(&self) -> bool { matches!(self, Template::Dioxus) }
 
 	pub const fn needs_wasm32_target(&self) -> bool {
 		matches!(self, Template::Sycamore | Template::Yew | Template::Leptos)
@@ -287,12 +265,11 @@ impl<'a> Template {
 		identifier:&str,
 		tauri_version:TauriVersion,
 	) -> anyhow::Result<()> {
-		let manifest_bytes = EMBEDDED_TEMPLATES::get(&format!(
-			"template-{self}/{CTA_MANIFEST_FILENAME}"
-		))
-		.with_context(|| "Failed to get manifest bytes")?
-		.data
-		.to_vec();
+		let manifest_bytes =
+			EMBEDDED_TEMPLATES::get(&format!("template-{self}/{CTA_MANIFEST_FILENAME}"))
+				.with_context(|| "Failed to get manifest bytes")?
+				.data
+				.to_vec();
 		let manifest_str = String::from_utf8(manifest_bytes)?;
 		let manifest = Manifest::parse(&manifest_str)?;
 
@@ -313,10 +290,7 @@ impl<'a> Template {
 			.collect::<Vec<_>>();
 
 		let styles = String::from_utf8(
-			EMBEDDED_TEMPLATES::get("_assets_/styles.css")
-				.unwrap()
-				.data
-				.to_vec(),
+			EMBEDDED_TEMPLATES::get("_assets_/styles.css").unwrap().data.to_vec(),
 		)?;
 
 		let mut manifest_template_data:HashMap<&str, &str> = [
@@ -354,22 +328,13 @@ impl<'a> Template {
 			),
 			(
 				"dev_url",
-				lte::render(
-					manifest.dev_url.unwrap_or_default(),
-					&manifest_template_data,
-				)?,
+				lte::render(manifest.dev_url.unwrap_or_default(), &manifest_template_data)?,
 			),
 			(
 				"frontend_dist",
-				lte::render(
-					manifest.frontend_dist.unwrap_or_default(),
-					&manifest_template_data,
-				)?,
+				lte::render(manifest.frontend_dist.unwrap_or_default(), &manifest_template_data)?,
 			),
-			(
-				"with_global_tauri",
-				manifest.with_global_tauri.unwrap_or_default().to_string(),
-			),
+			("with_global_tauri", manifest.with_global_tauri.unwrap_or_default().to_string()),
 			("lib_name", lib_name),
 			("styles", styles),
 		]
@@ -379,10 +344,8 @@ impl<'a> Template {
 			template_data.insert(version.as_str(), enabled.to_string());
 		}
 
-		let version_flags = TauriVersion::all()
-			.iter()
-			.map(|&v| (v, format!("v{v}")))
-			.collect::<Vec<_>>();
+		let version_flags =
+			TauriVersion::all().iter().map(|&v| (v, format!("v{v}"))).collect::<Vec<_>>();
 
 		let write_file = |file:&str, template_data| -> anyhow::Result<()> {
 			// remove the first component, which is certainly the template
@@ -409,10 +372,8 @@ impl<'a> Template {
 				// (pnpm-npm-yarn-stable-v1)%package.json"
 				name if name.starts_with("%(") && name[1..].contains(")%") => {
 					let mut s = name.strip_prefix("%(").unwrap().split(")%");
-					let (mut flags, name) = (
-						s.next().unwrap().split('-').collect::<Vec<_>>(),
-						s.next().unwrap(),
-					);
+					let (mut flags, name) =
+						(s.next().unwrap().split('-').collect::<Vec<_>>(), s.next().unwrap());
 
 					let for_version = version_flags
 						.iter()
@@ -420,9 +381,7 @@ impl<'a> Template {
 						.map(|(v, _)| *v);
 
 					// remove version flags to only keep package managers flags
-					flags.retain(|e| {
-						!version_flags.iter().any(|(_, flag)| e == flag)
-					});
+					flags.retain(|e| !version_flags.iter().any(|(_, flag)| e == flag));
 
 					// this file has a version flag and matches active version.
 					// if doesn't have any version flag, it should be rendered
@@ -441,9 +400,7 @@ impl<'a> Template {
 			};
 
 			// Only modify files that need to use the template engine
-			let (file_data, file_name) = if let Some(new_name) =
-				file_name.strip_suffix(".lte")
-			{
+			let (file_data, file_name) = if let Some(new_name) = file_name.strip_suffix(".lte") {
 				let data = EMBEDDED_TEMPLATES::get(file).unwrap().data.to_vec();
 				let data = lte::render(data, template_data)?.into_bytes();
 				(data, new_name)
@@ -462,22 +419,15 @@ impl<'a> Template {
 
 		// 1. write base files
 		for file in EMBEDDED_TEMPLATES::iter().filter(|e| {
-			path::PathBuf::from(e.to_string())
-				.components()
-				.next()
-				.unwrap()
-				.as_os_str() == "_base_"
+			path::PathBuf::from(e.to_string()).components().next().unwrap().as_os_str() == "_base_"
 		}) {
 			write_file(&file, &template_data)?;
 		}
 
 		// 2. write template files which can override files from base
 		for file in EMBEDDED_TEMPLATES::iter().filter(|e| {
-			path::PathBuf::from(e.to_string())
-				.components()
-				.next()
-				.unwrap()
-				.as_os_str() == path::PathBuf::from(format!("template-{self}"))
+			path::PathBuf::from(e.to_string()).components().next().unwrap().as_os_str()
+				== path::PathBuf::from(format!("template-{self}"))
 		}) {
 			write_file(&file, &template_data)?;
 		}
@@ -485,15 +435,12 @@ impl<'a> Template {
 		// 3. write extra files specified in the template manifest
 		for (src, dest) in manifest.files {
 			let data = EMBEDDED_TEMPLATES::get(&format!("_assets_/{src}"))
-				.with_context(|| {
-					format!("Failed to get asset file bytes: {src}")
-				})?
+				.with_context(|| format!("Failed to get asset file bytes: {src}"))?
 				.data;
 			let dest = target_dir.join(dest);
 			let parent = dest.parent().unwrap();
 			fs::create_dir_all(parent)?;
-			let mut file =
-				fs::OpenOptions::new().append(true).create(true).open(dest)?;
+			let mut file = fs::OpenOptions::new().append(true).create(true).open(dest)?;
 			file.write_all(&data)?;
 		}
 

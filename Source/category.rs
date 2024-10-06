@@ -13,8 +13,7 @@ pub enum Category {
 }
 
 impl<'a> Category {
-	pub const ALL:&'a [Self] =
-		&[Category::JsTs, Category::Rust, Category::Dotnet];
+	pub const ALL:&'a [Self] = &[Category::JsTs, Category::Rust, Category::Dotnet];
 
 	pub const fn package_managers(&self) -> &[PackageManager] {
 		match self {

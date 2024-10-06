@@ -76,12 +76,7 @@ impl Theme for ColorfulTheme {
 	/// Formats a prompt.
 	fn format_prompt(&self, f:&mut dyn fmt::Write, prompt:&str) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.prompt_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.prompt_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 
 		write!(f, "{}", &self.prompt_suffix)
@@ -100,12 +95,7 @@ impl Theme for ColorfulTheme {
 		default:Option<&str>,
 	) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.prompt_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.prompt_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 
 		match default {
@@ -129,22 +119,12 @@ impl Theme for ColorfulTheme {
 		default:Option<bool>,
 	) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.prompt_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.prompt_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 
 		match default {
 			None => {
-				write!(
-					f,
-					"{} {}",
-					self.hint_style.apply_to("(y/n)"),
-					&self.prompt_suffix
-				)
+				write!(f, "{} {}", self.hint_style.apply_to("(y/n)"), &self.prompt_suffix)
 			},
 			Some(true) => {
 				write!(
@@ -175,23 +155,13 @@ impl Theme for ColorfulTheme {
 		selection:Option<bool>,
 	) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.success_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.success_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 		let selection = selection.map(|b| if b { "yes" } else { "no" });
 
 		match selection {
 			Some(selection) => {
-				write!(
-					f,
-					"{} {}",
-					&self.success_suffix,
-					self.values_style.apply_to(selection)
-				)
+				write!(f, "{} {}", &self.success_suffix, self.values_style.apply_to(selection))
 			},
 			None => {
 				write!(f, "{}", &self.success_suffix)
@@ -207,20 +177,10 @@ impl Theme for ColorfulTheme {
 		sel:&str,
 	) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.success_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.success_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 
-		write!(
-			f,
-			"{} {}",
-			&self.success_suffix,
-			self.values_style.apply_to(sel)
-		)
+		write!(f, "{} {}", &self.success_suffix, self.values_style.apply_to(sel))
 	}
 
 	/// Formats a multi select prompt after selection.
@@ -231,12 +191,7 @@ impl Theme for ColorfulTheme {
 		selections:&[&str],
 	) -> fmt::Result {
 		if !prompt.is_empty() {
-			write!(
-				f,
-				"{} {} ",
-				&self.success_prefix,
-				self.prompt_style.apply_to(prompt)
-			)?;
+			write!(f, "{} {} ", &self.success_prefix, self.prompt_style.apply_to(prompt))?;
 		}
 
 		write!(f, "{} ", &self.success_suffix)?;
@@ -273,12 +228,7 @@ impl Theme for ColorfulTheme {
 				self.hint_style.apply_to(desc),
 			)
 		} else {
-			write!(
-				f,
-				"{} {}",
-				self.inactive_item_prefix,
-				self.inactive_item_style.apply_to(text),
-			)
+			write!(f, "{} {}", self.inactive_item_prefix, self.inactive_item_style.apply_to(text),)
 		}
 	}
 
@@ -291,29 +241,11 @@ impl Theme for ColorfulTheme {
 		active:bool,
 	) -> fmt::Result {
 		let details = match (checked, active) {
-			(true, true) => {
-				(
-					&self.checked_item_prefix,
-					self.active_item_style.apply_to(text),
-				)
-			},
-			(true, false) => {
-				(
-					&self.checked_item_prefix,
-					self.inactive_item_style.apply_to(text),
-				)
-			},
-			(false, true) => {
-				(
-					&self.unchecked_item_prefix,
-					self.active_item_style.apply_to(text),
-				)
-			},
+			(true, true) => (&self.checked_item_prefix, self.active_item_style.apply_to(text)),
+			(true, false) => (&self.checked_item_prefix, self.inactive_item_style.apply_to(text)),
+			(false, true) => (&self.unchecked_item_prefix, self.active_item_style.apply_to(text)),
 			(false, false) => {
-				(
-					&self.unchecked_item_prefix,
-					self.inactive_item_style.apply_to(text),
-				)
+				(&self.unchecked_item_prefix, self.inactive_item_style.apply_to(text))
 			},
 		};
 
@@ -329,24 +261,9 @@ impl Theme for ColorfulTheme {
 		active:bool,
 	) -> fmt::Result {
 		let details = match (picked, active) {
-			(true, true) => {
-				(
-					&self.picked_item_prefix,
-					self.active_item_style.apply_to(text),
-				)
-			},
-			(false, true) => {
-				(
-					&self.unpicked_item_prefix,
-					self.active_item_style.apply_to(text),
-				)
-			},
-			(_, false) => {
-				(
-					&self.unpicked_item_prefix,
-					self.inactive_item_style.apply_to(text),
-				)
-			},
+			(true, true) => (&self.picked_item_prefix, self.active_item_style.apply_to(text)),
+			(false, true) => (&self.unpicked_item_prefix, self.active_item_style.apply_to(text)),
+			(_, false) => (&self.unpicked_item_prefix, self.inactive_item_style.apply_to(text)),
 		};
 
 		write!(f, "{} {}", details.0, details.1)

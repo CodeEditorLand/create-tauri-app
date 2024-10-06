@@ -16,8 +16,7 @@ fn main() {
 	{
 		Some("cargo-create-tauri-app") => {
 			is_cargo = true;
-			if args.peek().and_then(|s| s.to_str()) == Some("create-tauri-app")
-			{
+			if args.peek().and_then(|s| s.to_str()) == Some("create-tauri-app") {
 				// remove the extra cargo subcommand
 				args.next();
 				Some("cargo create-tauri-app".into())
@@ -29,9 +28,5 @@ fn main() {
 		None => None,
 	};
 
-	create_tauri_app::run(
-		args,
-		bin_name,
-		if is_cargo { Some("cargo".into()) } else { None },
-	);
+	create_tauri_app::run(args, bin_name, if is_cargo { Some("cargo".into()) } else { None });
 }

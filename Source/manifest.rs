@@ -38,45 +38,30 @@ impl<'a> Manifest<'a> {
 				let (k, v) = (
 					s.next()
 						.with_context(|| {
-							format!(
-								"parsing manifest: key is not found in line \
-								 {line_number}"
-							)
+							format!("parsing manifest: key is not found in line {line_number}")
 						})?
 						.trim(),
 					s.next()
 						.with_context(|| {
-							format!(
-								"parsing manifest: value is not found in line \
-								 {line_number}"
-							)
+							format!("parsing manifest: value is not found in line {line_number}")
 						})?
 						.trim(),
 				);
 
 				if k.is_empty() {
-					bail!(
-						"parsing manifest: key is empty in line {line_number}"
-					);
+					bail!("parsing manifest: key is empty in line {line_number}");
 				}
 
 				if v.is_empty() {
-					bail!(
-						"parsing manifest: value is empty in line \
-						 {line_number}"
-					);
+					bail!("parsing manifest: value is empty in line {line_number}");
 				}
 
 				match k {
 					"beforeDevCommand" => manifest.before_dev_command = Some(v),
-					"beforeBuildCommand" => {
-						manifest.before_build_command = Some(v)
-					},
+					"beforeBuildCommand" => manifest.before_build_command = Some(v),
 					"devUrl" => manifest.dev_url = Some(v),
 					"frontendDist" => manifest.frontend_dist = Some(v),
-					"withGlobalTauri" => {
-						manifest.with_global_tauri = Some(v.parse()?)
-					},
+					"withGlobalTauri" => manifest.with_global_tauri = Some(v.parse()?),
 					_ if in_files_section => {
 						manifest.files.insert(k, v);
 					},
@@ -115,9 +100,7 @@ mod test {
 
 			Manifest {
 				before_dev_command:Some("npm start -- --port 1420"),
-				before_build_command:Some(
-					"{% pkg_manager_run_command %} build",
-				),
+				before_build_command:Some("{% pkg_manager_run_command %} build"),
 				dev_url:Some("http://localhost:1420"),
 				frontend_dist:None,
 				with_global_tauri:None,
@@ -170,9 +153,7 @@ mod test {
 
 			Manifest {
 				before_dev_command:Some("npm start -- --port 1420"),
-				before_build_command:Some(
-					"{% pkg_manager_run_command %} build mobile",
-				),
+				before_build_command:Some("{% pkg_manager_run_command %} build mobile"),
 				dev_url:Some("http://localhost:1420"),
 				frontend_dist:None,
 				with_global_tauri:None,

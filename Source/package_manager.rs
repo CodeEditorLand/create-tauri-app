@@ -45,8 +45,8 @@ impl FromStr for PackageManager {
 			"dotnet" => Ok(PackageManager::Dotnet),
 			_ => {
 				Err(format!(
-					"{YELLOW}{s}{RESET} is not a valid package manager. Valid \
-					 package mangers are [{}]",
+					"{YELLOW}{s}{RESET} is not a valid package manager. Valid package mangers are \
+					 [{}]",
 					PackageManager::ALL
 						.iter()
 						.map(|e| format!("{GREEN}{e}{RESET}"))
@@ -165,10 +165,7 @@ impl PackageManager {
 	pub const fn is_node(&self) -> bool {
 		matches!(
 			self,
-			PackageManager::Pnpm
-				| PackageManager::Yarn
-				| PackageManager::Npm
-				| PackageManager::Bun,
+			PackageManager::Pnpm | PackageManager::Yarn | PackageManager::Npm | PackageManager::Bun,
 		)
 	}
 }
