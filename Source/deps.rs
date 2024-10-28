@@ -204,13 +204,13 @@ pub fn print_missing_deps(
             name: "Deno",
             instruction: format!("Visit {BLUE}{BOLD}https://deno.land/{RESET}"),
             exists: &|| is_cli_installed("deno", "-v"),
-            skip: pkg_manager == PackageManager::Deno,
+            skip: pkg_manager != PackageManager::Deno,
         },
         Dep {
             name: "Bun",
             instruction: format!("Visit {BLUE}{BOLD}https://bun.sh/{RESET}"),
             exists: &|| is_cli_installed("bun", "-v"),
-            skip: pkg_manager == PackageManager::Bun,
+            skip: pkg_manager != PackageManager::Bun,
         },
         #[cfg(windows)]
         Dep {
