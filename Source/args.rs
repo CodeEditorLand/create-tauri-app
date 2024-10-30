@@ -35,7 +35,7 @@ impl FromStr for TauriVersion {
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "1" => Ok(Self::V1),
-            "2" => Ok(Self::V1),
+            "2" => Ok(Self::V2),
             _ => Err("unknown Tauri version"),
         }
     }
