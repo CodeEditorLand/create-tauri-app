@@ -1,13 +1,13 @@
 {
-	"cpu": [
-		"ia32"
-	],
+	"name": "create-tauri-app-win32-ia32-msvc",
+	"main": "create-tauri-app.win32-ia32-msvc.node",
 	"files": [
 		"create-tauri-app.win32-ia32-msvc.node"
 	],
-	"main": "create-tauri-app.win32-ia32-msvc.node",
-	"name": "create-tauri-app-win32-ia32-msvc",
 	"os": [
 		"win32"
+	],
+	"cpu": [
+		"ia32"
 	]
 }
