@@ -32,6 +32,7 @@ impl Display for TauriVersion {
 
 impl FromStr for TauriVersion {
     type Err = &'static str;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "1" => Ok(Self::V1),
@@ -109,10 +110,13 @@ pub fn parse(argv: Vec<OsString>, bin_name: Option<String>) -> anyhow::Result<Ar
         );
 
         println!("{help}");
+
         std::process::exit(0);
     }
+
     if pargs.contains(["-v", "--version"]) {
         println!("{}", env!("CARGO_PKG_VERSION"));
+
         std::process::exit(0);
     }
 

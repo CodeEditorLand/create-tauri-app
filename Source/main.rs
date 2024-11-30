@@ -6,7 +6,9 @@ use std::{env::args_os, ffi::OsStr, path::Path};
 
 fn main() {
     let mut args = args_os().peekable();
+
     let mut is_cargo = false;
+
     let bin_name = match args
         .next()
         .as_deref()
@@ -16,14 +18,17 @@ fn main() {
     {
         Some("cargo-create-tauri-app") => {
             is_cargo = true;
+
             if args.peek().and_then(|s| s.to_str()) == Some("create-tauri-app") {
                 // remove the extra cargo subcommand
                 args.next();
+
                 Some("cargo create-tauri-app".into())
             } else {
                 Some("cargo-create-tauri-app".into())
             }
         }
+
         Some(stem) => Some(stem.to_string()),
         None => None,
     };

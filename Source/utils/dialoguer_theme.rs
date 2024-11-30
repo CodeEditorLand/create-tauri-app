@@ -179,6 +179,7 @@ impl Theme for ColorfulTheme {
                 self.prompt_style.apply_to(prompt)
             )?;
         }
+
         let selection = selection.map(|b| if b { "yes" } else { "no" });
 
         match selection {
@@ -190,6 +191,7 @@ impl Theme for ColorfulTheme {
                     self.values_style.apply_to(selection)
                 )
             }
+
             None => {
                 write!(f, "{}", &self.success_suffix)
             }

@@ -21,6 +21,7 @@ fn is_tauri_cli_installed(tauri_version: TauriVersion) -> bool {
             .unwrap_or(false),
         s => s,
     };
+
     Command::new("cargo")
         .args(["tauri", "-V"])
         .output()
@@ -35,6 +36,7 @@ fn is_wasm32_installed() -> bool {
         .output()
         .map(|o| {
             let s = String::from_utf8_lossy(&o.stdout);
+
             s.contains("wasm32-unknown-unknown")
         })
         .unwrap_or(false)
@@ -51,6 +53,7 @@ fn is_webview2_installed() -> bool {
           .args(["-NoProfile", "-Command"])
           .arg("Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\WOW6432Node\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}' | ForEach-Object {$_.pv}")
           .output().map(|o|o.status.success());
+
     if let Ok(o) = output {
         if o {
             return true;
@@ -61,6 +64,7 @@ fn is_webview2_installed() -> bool {
             .args(["-NoProfile", "-Command"])
             .arg("Get-ItemProperty -Path 'HKLM:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}' | ForEach-Object {$_.pv}")
             .output().map(|o|o.status.success());
+
     if let Ok(o) = output {
         if o {
             return true;
@@ -71,6 +75,7 @@ fn is_webview2_installed() -> bool {
           .args(["-NoProfile", "-Command"])
           .arg("Get-ItemProperty -Path 'HKCU:\\SOFTWARE\\Microsoft\\EdgeUpdate\\Clients\\{F3017226-FE2A-4295-8BDF-00C3A9A7E4C5}' | ForEach-Object {$_.pv}")
           .output().map(|o|o.status.success());
+
     if let Ok(o) = output {
         if o {
             return true;
@@ -136,6 +141,7 @@ pub fn print_missing_deps(
     tauri_version: TauriVersion,
 ) -> bool {
     let rustc_installed = is_cli_installed("rustc", "-V");
+
     let cargo_installed = is_cli_installed("cargo", "-V");
 
     #[cfg(any(
@@ -293,11 +299,13 @@ pub fn print_missing_deps(
             .iter()
             .fold((0, 0), |(mut prev_f, mut prev_s), (f, s)| {
                 let f_len = f.len();
+
                 if f_len > prev_f {
                     prev_f = f_len;
                 }
 
                 let s_len = remove_colors(s).len();
+
                 if s_len > prev_s {
                     prev_s = s_len;
                 }
@@ -307,6 +315,7 @@ pub fn print_missing_deps(
 
     if !missing_deps.is_empty() {
         println!("\n\nYour system is {YELLOW}missing dependencies{RESET} (or they do not exist in {YELLOW}$PATH{RESET}):");
+
         for (index, (name, instruction)) in missing_deps.iter().enumerate() {
             if index == 0 {
                 println!(
@@ -321,17 +330,20 @@ pub fn print_missing_deps(
                     "─".repeat(largest_second_cell + 2)
                 );
             }
+
             println!(
                 "│ {YELLOW}{name}{RESET}{} │ {instruction}{} │",
                 " ".repeat(largest_first_cell - name.len()),
                 " ".repeat(largest_second_cell - remove_colors(instruction).len()),
             );
         }
+
         println!(
             "╰{}┴{}╯",
             "─".repeat(largest_first_cell + 2),
             "─".repeat(largest_second_cell + 2),
         );
+
         println!();
 
         true

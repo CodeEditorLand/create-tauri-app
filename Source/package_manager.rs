@@ -36,6 +36,7 @@ impl Display for PackageManager {
 
 impl FromStr for PackageManager {
     type Err = String;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "cargo" => Ok(PackageManager::Cargo),

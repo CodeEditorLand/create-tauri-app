@@ -30,11 +30,13 @@ impl<'a> Manifest<'a> {
 
             if line == "[files]" {
                 in_files_section = true;
+
                 continue;
             }
 
             if line.contains('=') {
                 let mut s = line.split('=');
+
                 let (k, v) = (
                     s.next()
                         .with_context(|| {
@@ -65,10 +67,12 @@ impl<'a> Manifest<'a> {
                     _ if in_files_section => {
                         manifest.files.insert(k, v);
                     }
+
                     _ => {}
                 }
             }
         }
+
         Ok(manifest)
     }
 }
@@ -95,7 +99,9 @@ mod test {
 
         assert_eq!(Manifest::parse(manifest_file).unwrap(), {
             let mut files = HashMap::new();
+
             files.insert("tauri.svg", "src/assets/tauri.svg");
+
             files.insert("styles.css", "src/styles.css");
 
             Manifest {
@@ -148,7 +154,9 @@ mod test {
 
         assert_eq!(Manifest::parse(manifest_file).unwrap(), {
             let mut files = HashMap::new();
+
             files.insert("tauri.svg", "src/assets/tauri.svg");
+
             files.insert("styles.css", "src/styles.css");
 
             Manifest {

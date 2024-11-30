@@ -89,6 +89,7 @@ impl Display for Template {
 
 impl FromStr for Template {
     type Err = String;
+
     fn from_str(s: &str) -> Result<Self, Self::Err> {
         match s {
             "vanilla" => Ok(Template::Vanilla),
@@ -137,6 +138,7 @@ impl Template {
             Template::Blazor => {
                 "Blazor - (https://dotnet.microsoft.com/en-us/apps/aspnet/web-apps/blazor/)"
             }
+
             Template::Dioxus => "Dioxus - (https://dioxuslabs.com/)",
             _ => unreachable!(),
         }
@@ -174,6 +176,7 @@ impl<'a> Template {
                     Some(&[Flavor::TypeScript, Flavor::JavaScript])
                 }
             }
+
             Template::Vue => Some(&[Flavor::TypeScript, Flavor::JavaScript]),
             Template::Svelte => Some(&[Flavor::TypeScript, Flavor::JavaScript]),
             Template::React => Some(&[Flavor::TypeScript, Flavor::JavaScript]),
@@ -231,6 +234,7 @@ impl<'a> Template {
             Template::Yew | Template::Leptos | Template::Sycamore | Template::Dioxus => {
                 &[PackageManager::Cargo]
             }
+
             Template::Blazor => &[PackageManager::Dotnet],
         }
     }
@@ -276,10 +280,13 @@ impl<'a> Template {
                 .with_context(|| "Failed to get manifest bytes")?
                 .data
                 .to_vec();
+
         let manifest_str = String::from_utf8(manifest_bytes)?;
+
         let manifest = Manifest::parse(&manifest_str)?;
 
         let lib_name = format!("{}_lib", package_name.replace('-', "_"));
+
         let project_name_pascal_case = utils::to_pascal_case(project_name);
 
         let versions = TauriVersion::all()
@@ -380,6 +387,7 @@ impl<'a> Template {
                 .collect::<path::PathBuf>();
 
             let p = target_dir.join(p);
+
             let file_name = p.file_name().unwrap().to_string_lossy();
 
             let file_name = match &*file_name {
@@ -393,6 +401,7 @@ impl<'a> Template {
                 // example: "%(pnpm-npm-yarn-stable-v1)%package.json"
                 name if name.starts_with("%(") && name[1..].contains(")%") => {
                     let mut s = name.strip_prefix("%(").unwrap().split(")%");
+
                     let (mut flags, name) = (
                         s.next().unwrap().split('-').collect::<Vec<_>>(),
                         s.next().unwrap(),
@@ -419,12 +428,14 @@ impl<'a> Template {
                         return Ok(());
                     }
                 }
+
                 name => name,
             };
 
             // Only modify files that need to use the template engine
             let (file_data, file_name) = if let Some(new_name) = file_name.strip_suffix(".lte") {
                 let data = EMBEDDED_TEMPLATES::get(file).unwrap().data.to_vec();
+
                 let data = lte::render(data, template_data)?.into_bytes();
                 (data, new_name)
             } else {
@@ -435,8 +446,11 @@ impl<'a> Template {
             let file_name = lte::render(file_name, template_data)?;
 
             let parent = p.parent().unwrap();
+
             fs::create_dir_all(parent)?;
+
             fs::write(parent.join(file_name), file_data)?;
+
             Ok(())
         };
 
@@ -469,13 +483,18 @@ impl<'a> Template {
             let data = EMBEDDED_TEMPLATES::get(&format!("_assets_/{src}"))
                 .with_context(|| format!("Failed to get asset file bytes: {src}"))?
                 .data;
+
             let dest = target_dir.join(dest);
+
             let parent = dest.parent().unwrap();
+
             fs::create_dir_all(parent)?;
+
             let mut file = fs::OpenOptions::new()
                 .append(true)
                 .create(true)
                 .open(dest)?;
+
             file.write_all(&data)?;
         }
 

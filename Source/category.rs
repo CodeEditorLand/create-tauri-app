@@ -39,6 +39,7 @@ impl Display for Category {
             .map(|p| p.to_string())
             .collect::<Vec<_>>()
             .join(", ");
+
         match self {
             Category::Rust => write!(f, "Rust - ({managers})"),
             Category::JsTs => write!(f, "TypeScript / JavaScript - ({managers})"),

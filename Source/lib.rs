@@ -45,10 +45,13 @@ where
 {
     let _ = ctrlc::set_handler(move || {
         eprint!("\x1b[?25h");
+
         exit(0);
     });
+
     if let Err(e) = try_run(args, bin_name, detected_manager) {
         eprintln!("{BOLD}{RED}error{RESET}: {e:#}");
+
         exit(1);
     }
 }
@@ -63,8 +66,11 @@ where
     A: Into<OsString> + Clone,
 {
     let detected_manager = detected_manager.and_then(|p| p.parse::<PackageManager>().ok());
+
     let args = args::parse(args.into_iter().map(Into::into).collect(), bin_name)?;
+
     let defaults = args::Args::default();
+
     let args::Args {
         skip,
         tauri_version,
@@ -74,6 +80,7 @@ where
         force,
         identifier,
     } = args;
+
     let cwd = std::env::current_dir()?;
 
     // Project name used for the project directory name and productName in tauri.conf.json
@@ -84,6 +91,7 @@ where
             let default = defaults
                 .project_name
                 .context("default project_name not set")?;
+
             if skip {
                 default
             } else {
@@ -104,6 +112,7 @@ where
         project_name.clone()
     } else {
         let valid_name = utils::to_valid_pkg_name(&project_name);
+
         if skip {
             valid_name
         } else {
@@ -127,6 +136,7 @@ where
         Some(name) => name,
         None => {
             let default = format!("com.{package_name}.app");
+
             if skip {
                 default
             } else {
@@ -163,8 +173,10 @@ where
                 .default(false)
                 .interact()?
         };
+
         if !overwrite {
             eprintln!("{BOLD}{RED}✘{RESET} Directory is not empty, Operation Cancelled");
+
             exit(1);
         }
     };
@@ -173,6 +185,7 @@ where
     let category = if manager.is_none() {
         // Filter managers if a template is passed on the command line
         let managers = PackageManager::ALL.to_vec();
+
         let managers = template
             .map(|t| {
                 managers
@@ -185,6 +198,7 @@ where
 
         // Filter categories based on the detected package mangers
         let categories = Category::ALL.to_vec();
+
         let mut categories = categories
             .into_iter()
             .filter(|c| c.package_managers().iter().any(|p| managers.contains(p)))
@@ -212,6 +226,7 @@ where
                 .items(&categories)
                 .default(0)
                 .interact()?;
+
             Some(categories[index])
         }
     } else {
@@ -241,6 +256,7 @@ where
                         .items(&managers)
                         .default(0)
                         .interact()?;
+
                     managers[index]
                 }
             } else {
@@ -273,12 +289,14 @@ where
 
                 // Prompt for flavors if the template has more than one flavor
                 let flavors = template.flavors(pkg_manager);
+
                 if let Some(flavors) = flavors {
                     let index = Select::with_theme(&ColorfulTheme::default())
                         .with_prompt("Choose your UI flavor")
                         .items(flavors)
                         .default(0)
                         .interact()?;
+
                     template.from_flavor(flavors[index])
                 } else {
                     template
@@ -296,6 +314,7 @@ where
             templates_no_flavors.iter().map(|e|format!("{GREEN}{e}{RESET}")).collect::<Vec<_>>().join(", "),
             template.possible_package_managers().iter().map(|e|format!("{GREEN}{e}{RESET}")).collect::<Vec<_>>().join(", "),
         );
+
         exit(1);
     }
 
@@ -306,17 +325,21 @@ where
         fn clean_dir(dir: &std::path::PathBuf) -> anyhow::Result<()> {
             for entry in fs::read_dir(dir)?.flatten() {
                 let path = entry.path();
+
                 if entry.file_type()?.is_dir() {
                     if entry.file_name() != ".git" {
                         clean_dir(&path)?;
+
                         std::fs::remove_dir(path)?;
                     }
                 } else {
                     fs::remove_file(path)?;
                 }
             }
+
             Ok(())
         }
+
         clean_dir(&target_dir)?;
     } else {
         let _ = fs::create_dir_all(&target_dir);
@@ -334,8 +357,11 @@ where
 
     // Print post-render instructions
     println!();
+
     print!("Template created!");
+
     let has_missing = print_missing_deps(pkg_manager, template, tauri_version);
+
     if has_missing {
         let prereqs_url = match tauri_version {
             TauriVersion::V1 => "https://v1.tauri.app/v1/guides/getting-started/prerequisites/",
@@ -346,6 +372,7 @@ where
     } else {
         println!(" To get started run:")
     }
+
     if target_dir != cwd {
         println!(
             "  cd {}",
@@ -356,9 +383,11 @@ where
             }
         );
     }
+
     if let Some(cmd) = pkg_manager.install_cmd() {
         println!("  {cmd}");
     }
+
     if matches!(tauri_version, TauriVersion::V1) {
         println!("  {} tauri dev", pkg_manager.run_cmd());
     } else {
@@ -367,18 +396,27 @@ where
         println!("  {} tauri ios init", pkg_manager.run_cmd());
 
         println!();
+
         println!("For Desktop development, run:");
+
         println!("  {} tauri dev", pkg_manager.run_cmd());
+
         println!();
+
         println!("For Android development, run:");
+
         println!("  {} tauri android dev", pkg_manager.run_cmd());
         #[cfg(target_os = "macos")]
         {
             println!();
+
             println!("For iOS development, run:");
+
             println!("  {} tauri ios dev", pkg_manager.run_cmd());
         }
     }
+
     println!();
+
     Ok(())
 }

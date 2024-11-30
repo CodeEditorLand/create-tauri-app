@@ -83,6 +83,7 @@ struct Lexer<'a> {
 impl<'a> Lexer<'a> {
     fn new(bytes: &'a [u8]) -> Self {
         let len = bytes.len();
+
         Self {
             len,
             bytes,
@@ -107,19 +108,23 @@ impl<'a> Lexer<'a> {
 
     fn is_symbol_start(&self) -> bool {
         let c = self.current_char();
+
         c.is_alphabetic() || c == '_'
     }
 
     fn is_symbol(&self) -> bool {
         let c = self.current_char();
+
         c.is_alphanumeric() || c == '_'
     }
 
     fn read_symbol(&mut self) -> &'a [u8] {
         let start = self.cursor;
+
         while self.is_symbol() {
             self.cursor += 1;
         }
+
         let end = self.cursor - 1;
         &self.bytes[start..=end]
     }
@@ -135,24 +140,30 @@ impl<'a> Lexer<'a> {
 
         if self.current_char() == '{' && self.next_char() == '%' {
             self.in_bracket = true;
+
             self.cursor += 2;
+
             return Some(Token::OBracket);
         }
 
         if self.current_char() == '%' && self.next_char() == '}' {
             self.in_bracket = false;
+
             self.cursor += 2;
+
             return Some(Token::CBracket);
         }
 
         if self.current_char() == '!' {
             self.cursor += 1;
+
             return Some(Token::Bang);
         }
 
         if self.in_bracket {
             if self.is_symbol_start() {
                 let symbol = self.read_symbol();
+
                 for (keyword, t) in KEYWORDS {
                     if *keyword == symbol {
                         return Some(*t);
@@ -162,12 +173,14 @@ impl<'a> Lexer<'a> {
                 return Some(Token::Var(symbol));
             } else {
                 self.cursor += 1;
+
                 return Some(Token::Invalid(self.cursor, self.current_char()));
             }
         }
 
         if !self.in_bracket {
             let start = self.cursor;
+
             while !(self.current_char() == '{' && self.next_char() == '%') {
                 self.cursor += 1;
 
@@ -175,7 +188,9 @@ impl<'a> Lexer<'a> {
                     break;
                 }
             }
+
             let end = self.cursor - 1;
+
             return Some(Token::Text(&self.bytes[start..=end]));
         }
 
@@ -222,13 +237,17 @@ impl<'a> Stmt<'a> {
             Stmt::Text(t) => {
                 out.write_all(t).map_err(|e| e.to_string())?;
             }
+
             Stmt::Var(var) => {
                 let var = std::str::from_utf8(var).map_err(|e| e.to_string())?;
+
                 let value = data
                     .get(var)
                     .ok_or_else(|| format!("Unrecognized variable: {var}"))?;
+
                 out.write_all(value.as_ref()).map_err(|e| e.to_string())?;
             }
+
             Stmt::If {
                 var,
                 negated,
@@ -236,12 +255,15 @@ impl<'a> Stmt<'a> {
                 else_condition,
             } => {
                 let var = std::str::from_utf8(var).map_err(|e| e.to_string())?;
+
                 let value = data
                     .get(var)
                     .ok_or_else(|| format!("Unrecognized variable: {var}"))?;
+
                 let value = value.as_ref();
 
                 let truthy = is_truthy(value);
+
                 let evaluated = if (truthy && !negated) || (!truthy && *negated) {
                     condition
                 } else if let Some(else_condition) = else_condition {
@@ -296,6 +318,7 @@ impl<'a> Parser<'a> {
     fn consume_text(&mut self) -> Option<&'a [u8]> {
         if let Token::Text(text) = self.current_token() {
             self.cursor += 1;
+
             Some(text)
         } else {
             None
@@ -305,6 +328,7 @@ impl<'a> Parser<'a> {
     fn consume_var(&mut self) -> Option<&'a [u8]> {
         if let Token::Var(var) = self.current_token() {
             self.cursor += 1;
+
             Some(var)
         } else {
             None
@@ -317,6 +341,7 @@ impl<'a> Parser<'a> {
 
             let negated = if self.current_token() == Token::Bang {
                 self.cursor += 1;
+
                 true
             } else {
                 false
@@ -330,6 +355,7 @@ impl<'a> Parser<'a> {
             })?;
 
             let mut condition = Vec::new();
+
             while self.current_token() != Token::Else || self.current_token() != Token::EndIf {
                 match self.next()? {
                     Some(stmt) => condition.push(stmt),
@@ -341,6 +367,7 @@ impl<'a> Parser<'a> {
                 self.cursor += 1;
 
                 let mut else_condition = Vec::new();
+
                 while self.current_token() != Token::EndIf {
                     match self.next()? {
                         Some(stmt) => else_condition.push(stmt),
@@ -382,16 +409,19 @@ impl<'a> Parser<'a> {
         }
 
         let text = self.consume_text();
+
         if text.is_some() {
             return Ok(text.map(Stmt::Text));
         }
 
         let var = self.consume_var();
+
         if var.is_some() {
             return Ok(var.map(Stmt::Var));
         }
 
         let if_ = self.consume_if()?;
+
         if if_.is_some() {
             return Ok(if_);
         }
@@ -406,13 +436,19 @@ where
     V: AsRef<[u8]>,
 {
     let template = template.as_ref();
+
     let tokens: Vec<Token> = Lexer::new(template).collect();
+
     let mut parser = Parser::new(&tokens);
+
     let mut stmts: Vec<Stmt> = Vec::new();
+
     while let Some(stmt) = parser.next()? {
         stmts.push(stmt);
     }
+
     let mut out = Vec::new();
+
     for stmt in stmts {
         stmt.execute(&mut out, data)?;
     }
@@ -429,8 +465,11 @@ mod tests {
     #[test]
     fn it_replaces_variable() {
         let template = "<html>Hello {% name %}</html>";
+
         let data: HashMap<&str, &str> = [("name", "world")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello world</html>")
     }
 
@@ -441,29 +480,39 @@ mod tests {
         <h1>Hello<h2>
         <em>{% name %}</em>
         </html>"#;
+
         let data: HashMap<&str, &str> = [("name", "world")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         let expected = r#"
         <html>
         <h1>Hello<h2>
         <em>world</em>
         </html>"#;
+
         assert_eq!(rendered, expected)
     }
 
     #[test]
     fn it_performs_condition() {
         let template = "<html>Hello {% if alpha %}alpha{% else %}stable{% endif %}</html>";
+
         let data: HashMap<&str, &str> = [("alpha", "true")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello alpha</html>")
     }
 
     #[test]
     fn it_performs_else_condition() {
         let template = "<html>Hello {% if alpha %}alpha{% else %}stable{% endif %}</html>";
+
         let data: HashMap<&str, &str> = [("alpha", "false")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello stable</html>")
     }
 
@@ -475,13 +524,17 @@ mod tests {
         <em>alpha</em>{% else %}
         <em>stable</em>{% endif %}
         </html>"#;
+
         let data: HashMap<&str, &str> = [("alpha", "true")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         let expected = r#"
         <html>
         <h1>Hello<h2>
         <em>alpha</em>
         </html>"#;
+
         assert_eq!(rendered, expected)
     }
 
@@ -493,13 +546,17 @@ mod tests {
         <em>{% alpha_str %}</em>{% else %}
         <em>stable</em>{% endif %}
         </html>"#;
+
         let data: HashMap<&str, &str> = [("alpha", "true"), ("alpha_str", "holla alpha")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         let expected = r#"
         <html>
         <h1>Hello<h2>
         <em>holla alpha</em>
         </html>"#;
+
         assert_eq!(rendered, expected)
     }
 
@@ -511,18 +568,22 @@ mod tests {
         <em>{% alpha_str %}</em>{% else %}
         <em>{% if v2 %}rc{%else%}stable{%endif%}</em>{% endif %}
         </html>"#;
+
         let data: HashMap<&str, &str> = [
             ("alpha", "false"),
             ("v2", "true"),
             ("alpha_str", "holla alpha"),
         ]
         .into();
+
         let rendered = render(template, &data).expect("it should render");
+
         let expected = r#"
         <html>
         <h1>Hello<h2>
         <em>rc</em>
         </html>"#;
+
         assert_eq!(rendered, expected)
     }
 
@@ -530,37 +591,55 @@ mod tests {
     fn truthy_and_falsy() {
         let template =
             "<html>Hello {% if beforeDevCommand %}{% beforeDevCommand %}{% endif %}</html>";
+
         let data: HashMap<&str, &str> = [("beforeDevCommand", "pnpm run")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello pnpm run</html>");
 
         let template =
             "<html>Hello {% if beforeDevCommand %}{% beforeDevCommand %}{% endif %}</html>";
+
         let data: HashMap<&str, &str> = [("beforeDevCommand", "")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello </html>");
     }
 
     #[test]
     fn negated_value() {
         let template = "<html>Hello {% if !name %}world{% else %}{ %name% }{%endif %}</html>";
+
         let data: HashMap<&str, &str> = [("name", "")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello world</html>");
 
         let template = "<html>Hello {% if !name %}world{% else %}{% name %}{%endif %}</html>";
+
         let data: HashMap<&str, &str> = [("name", "tauri")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello tauri</html>");
 
         let template = "<html>Hello {% if !render %}world{% else %}{% name %}{%endif %}</html>";
+
         let data: HashMap<&str, &str> = [("render", "true"), ("name", "tauri")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello tauri</html>");
 
         let template = "<html>Hello {% if !render %}world{% else %}{% name %}{%endif %}</html>";
+
         let data: HashMap<&str, &str> = [("render", "false"), ("name", "tauri")].into();
+
         let rendered = render(template, &data).expect("it should render");
+
         assert_eq!(rendered, "<html>Hello world</html>");
     }
 
@@ -568,7 +647,9 @@ mod tests {
     #[should_panic]
     fn it_panics() {
         let template = "<html>Hello {% name }</html>";
+
         let data: HashMap<&str, &str> = [("name", "world")].into();
+
         render(template, &data).unwrap();
     }
 }

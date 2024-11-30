@@ -157,6 +157,7 @@ impl Theme for ColorfulTheme {
 		if !prompt.is_empty() {
 			write!(f, "{} {} ", &self.success_prefix, self.prompt_style.apply_to(prompt))?;
 		}
+
 		let selection = selection.map(|b| if b { "yes" } else { "no" });
 
 		match selection {
