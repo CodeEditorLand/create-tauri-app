@@ -2,7 +2,7 @@
 edition = "2021"
 name = "create-tauri-app-node"
 version = "0.0.0"
-license = "Apache-2.0 OR MIT"
+license-file = "LICENSE"
 
 [lib]
 crate-type = ["cdylib"]
