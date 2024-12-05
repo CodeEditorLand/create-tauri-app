@@ -28,10 +28,10 @@ opt-level = "s"
 strip = true
 
 [dependencies]
-anyhow = "1"
-dialoguer = "0.11"
+anyhow = { version = "1" }
+dialoguer = { version = "0.11" }
 pico-args = "0.5"
-ctrlc = "3.3"
+ctrlc = { version = "3.3" }
 rust-embed = { version = "8.3", features = [
 	"compression",
 	"interpolate-folder-path",
