@@ -1,7 +1,7 @@
 {
+	"name": "create-tauri-app-worker",
 	"dependencies": {},
 	"devDependencies": {
 		"wrangler": "3.92"
-	},
-	"name": "create-tauri-app-worker"
+	}
 }

@@ -1,15 +1,15 @@
 {
-	"cpu": [
-		"arm64"
-	],
-	"dependencies": {},
-	"devDependencies": {},
+	"name": "create-tauri-app-darwin-arm64",
+	"main": "create-tauri-app.darwin-arm64.node",
 	"files": [
 		"create-tauri-app.darwin-arm64.node"
 	],
-	"main": "create-tauri-app.darwin-arm64.node",
-	"name": "create-tauri-app-darwin-arm64",
+	"dependencies": {},
+	"devDependencies": {},
 	"os": [
 		"darwin"
+	],
+	"cpu": [
+		"arm64"
 	]
 }

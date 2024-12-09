@@ -1,15 +1,15 @@
 {
-	"cpu": [
-		"x64"
-	],
-	"dependencies": {},
-	"devDependencies": {},
+	"name": "create-tauri-app-win32-x64-msvc",
+	"main": "create-tauri-app.win32-x64-msvc.node",
 	"files": [
 		"create-tauri-app.win32-x64-msvc.node"
 	],
-	"main": "create-tauri-app.win32-x64-msvc.node",
-	"name": "create-tauri-app-win32-x64-msvc",
+	"dependencies": {},
+	"devDependencies": {},
 	"os": [
 		"win32"
+	],
+	"cpu": [
+		"x64"
 	]
 }

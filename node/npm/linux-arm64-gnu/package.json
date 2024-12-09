@@ -1,18 +1,18 @@
 {
-	"cpu": [
-		"arm64"
-	],
-	"dependencies": {},
-	"devDependencies": {},
+	"name": "create-tauri-app-linux-arm64-gnu",
+	"main": "create-tauri-app.linux-arm64-gnu.node",
 	"files": [
 		"create-tauri-app.linux-arm64-gnu.node"
 	],
-	"libc": [
-		"glibc"
-	],
-	"main": "create-tauri-app.linux-arm64-gnu.node",
-	"name": "create-tauri-app-linux-arm64-gnu",
+	"dependencies": {},
+	"devDependencies": {},
 	"os": [
 		"linux"
+	],
+	"cpu": [
+		"arm64"
+	],
+	"libc": [
+		"glibc"
 	]
 }

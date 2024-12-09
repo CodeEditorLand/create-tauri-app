@@ -1,11 +1,11 @@
 {
-	"dependencies": {},
-	"devDependencies": {},
+	"name": "create-tauri-app-darwin-universal",
+	"main": "create-tauri-app.darwin-universal.node",
 	"files": [
 		"create-tauri-app.darwin-universal.node"
 	],
-	"main": "create-tauri-app.darwin-universal.node",
-	"name": "create-tauri-app-darwin-universal",
+	"dependencies": {},
+	"devDependencies": {},
 	"os": [
 		"darwin"
 	]
