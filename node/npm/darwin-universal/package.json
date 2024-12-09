@@ -1,4 +1,6 @@
 {
+	"dependencies": {},
+	"devDependencies": {},
 	"files": [
 		"create-tauri-app.darwin-universal.node"
 	],

@@ -2,6 +2,8 @@
 	"cpu": [
 		"arm"
 	],
+	"dependencies": {},
+	"devDependencies": {},
 	"files": [
 		"create-tauri-app.linux-arm-gnueabihf.node"
 	],

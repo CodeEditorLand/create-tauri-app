@@ -2,6 +2,8 @@
 	"cpu": [
 		"x64"
 	],
+	"dependencies": {},
+	"devDependencies": {},
 	"files": [
 		"create-tauri-app.linux-x64-musl.node"
 	],

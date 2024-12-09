@@ -2,6 +2,8 @@
 	"cpu": [
 		"ia32"
 	],
+	"dependencies": {},
+	"devDependencies": {},
 	"files": [
 		"create-tauri-app.win32-ia32-msvc.node"
 	],

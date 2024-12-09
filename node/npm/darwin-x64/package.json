@@ -2,6 +2,8 @@
 	"cpu": [
 		"x64"
 	],
+	"dependencies": {},
+	"devDependencies": {},
 	"files": [
 		"create-tauri-app.darwin-x64.node"
 	],
